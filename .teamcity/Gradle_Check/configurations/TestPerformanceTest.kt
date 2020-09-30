@@ -53,7 +53,7 @@ class TestPerformanceTest(model: CIBuildModel, stage: Stage) : BaseGradleBuildTy
             tests.map { """--tests "$it"""" }.joinToString(" "),
             """--warmups 2 --runs 2 --checks none""",
             """"-PtestJavaHome=${os.individualPerformanceTestJavaHome()}"""",
-            """"-PtestJavaVersion=${os.perfTestJavaVersion.version}""""
+            """"-PtestJavaVersion=${os.perfTestJavaVersion.major}""""
         ) + explicitToolchains("${os.buildJavaHome()},${os.individualPerformanceTestJavaHome()}"))
     }
 

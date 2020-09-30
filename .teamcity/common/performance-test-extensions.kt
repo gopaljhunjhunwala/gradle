@@ -46,7 +46,7 @@ fun performanceTestCommandLine(task: String, baselines: String, extraParameters:
     "$task${if (extraParameters.isEmpty()) "" else " $extraParameters" }",
     "-PperformanceBaselines=$baselines",
     """"-PtestJavaHome=${os.individualPerformanceTestJavaHome()}"""",
-    """"-PtestJavaVersion=${os.perfTestJavaVersion.version}""""
+    """"-PtestJavaVersion=${os.perfTestJavaVersion.major}""""
 ) + (explicitToolchains("${os.buildJavaHome()},${os.individualPerformanceTestJavaHome()}")
 ) + listOf(
     "-Porg.gradle.performance.branchName" to "%teamcity.build.branch%",

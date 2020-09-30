@@ -16,7 +16,7 @@
 
 package common
 
-enum class JvmVersion(val version: Int) {
+enum class JvmVersion(val major: Int) {
     java8(8),
     java9(9),
     java10(10),
