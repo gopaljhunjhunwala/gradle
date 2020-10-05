@@ -401,11 +401,23 @@ public class JavaCompile extends AbstractCompile implements HasCompileOptions {
             if (compileOptions.getRelease().isPresent()) {
                 spec.setRelease(compileOptions.getRelease().get());
             } else {
+                boolean didSetSourceOrTarget = false;
                 if (super.getSourceCompatibility() != null) {
                     spec.setSourceCompatibility(getSourceCompatibility());
+                    didSetSourceOrTarget = true;
                 }
                 if (super.getTargetCompatibility() != null) {
                     spec.setTargetCompatibility(getTargetCompatibility());
+                    didSetSourceOrTarget = true;
+                }
+                if (!didSetSourceOrTarget) {
+                    if (toolchain.getLanguageVersion().canCompileOrRun(9)) {
+                        spec.setRelease(toolchain.getLanguageVersion().asInt());
+                    } else {
+                        String version = toolchain.getLanguageVersion().toString();
+                        spec.setSourceCompatibility(version);
+                        spec.setTargetCompatibility(version);
+                    }
                 }
             }
         } else if (compileOptions.getRelease().isPresent()) {

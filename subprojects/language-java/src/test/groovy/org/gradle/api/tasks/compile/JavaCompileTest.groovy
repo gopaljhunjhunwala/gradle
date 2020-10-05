@@ -128,7 +128,7 @@ class JavaCompileTest extends AbstractProjectBuilderSpec {
         spec.compileOptions.forkOptions.javaHome == javaHome
     }
 
-    def "spec is configured using the toolchain compiler in-process using the current jvm as toolchain"() {
+    def "spec is configured using the toolchain compiler in-process using the current jvm as toolchain and sets release"() {
         def javaCompile = project.tasks.create("compileJava", JavaCompile)
         javaCompile.setDestinationDir(new File("tmp"))
         def javaHome = Jvm.current().javaHome
@@ -148,48 +148,30 @@ class JavaCompileTest extends AbstractProjectBuilderSpec {
         spec.compileOptions.forkOptions.javaHome == javaHome
         spec.getSourceCompatibility() == null
         spec.getTargetCompatibility() == null
+        spec.release == 12
     }
 
-    def 'spec is configured with the right values for source and target compatibility when set in parallel with a toolchain'() {
+    def "spec is configured using the toolchain compiler in-process using the current jvm as toolchain and set source and target compatibility"() {
         def javaCompile = project.tasks.create("compileJava", JavaCompile)
         javaCompile.setDestinationDir(new File("tmp"))
         def javaHome = Jvm.current().javaHome
         def metadata = Mock(JavaInstallationMetadata)
         def compiler = Mock(JavaCompiler)
 
-        metadata.languageVersion >> JavaLanguageVersion.of(12)
+        metadata.languageVersion >> JavaLanguageVersion.of(8)
         metadata.installationPath >> TestFiles.fileFactory().dir(javaHome)
         compiler.metadata >> metadata
 
         when:
         javaCompile.javaCompiler.set(compiler)
-        javaCompile.sourceCompatibility = '8'
-        javaCompile.targetCompatibility = '10'
         def spec = javaCompile.createSpec()
 
         then:
+        spec instanceof DefaultJavaCompileSpec
+        spec.compileOptions.forkOptions.javaHome == javaHome
         spec.getSourceCompatibility() == '8'
-        spec.getTargetCompatibility() == '10'
-    }
-
-    def 'spec is configured with the right value for release when set in parallel with a toolchain'() {
-        def javaCompile = project.tasks.create("compileJava", JavaCompile)
-        javaCompile.setDestinationDir(new File("tmp"))
-        def javaHome = Jvm.current().javaHome
-        def metadata = Mock(JavaInstallationMetadata)
-        def compiler = Mock(JavaCompiler)
-
-        metadata.languageVersion >> JavaLanguageVersion.of(12)
-        metadata.installationPath >> TestFiles.fileFactory().dir(javaHome)
-        compiler.metadata >> metadata
-
-        when:
-        javaCompile.javaCompiler.set(compiler)
-        javaCompile.options.release.set(10)
-        def spec = javaCompile.createSpec()
-
-        then:
-        spec.release == 10
+        spec.getTargetCompatibility() == '8'
+        spec.release == null
     }
 
 }
