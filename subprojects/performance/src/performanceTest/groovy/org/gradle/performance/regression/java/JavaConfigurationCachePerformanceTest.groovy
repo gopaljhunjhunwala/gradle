@@ -35,6 +35,7 @@ class JavaConfigurationCachePerformanceTest extends AbstractCrossVersionPerforma
 
     def setup() {
         stateDirectory = temporaryFolder.file(".gradle/configuration-cache")
+        runner.measureGarbageCollection = false
     }
 
     @Unroll

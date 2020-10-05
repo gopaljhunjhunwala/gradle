@@ -49,6 +49,7 @@ class FasterIncrementalAndroidBuildsPerformanceTest extends AbstractCrossBuildPe
 
     def "faster non-abi change (build comparison)"() {
         given:
+        runner.measureGarbageCollection = false
         buildSpecForSupportedOptimizations(testProject) {
             testProject.configureForNonAbiChange(delegate)
         }
@@ -61,6 +62,7 @@ class FasterIncrementalAndroidBuildsPerformanceTest extends AbstractCrossBuildPe
 
     def "faster abi change (build comparison)"() {
         given:
+        runner.measureGarbageCollection = false
         buildSpecForSupportedOptimizations(testProject) {
             testProject.configureForAbiChange(delegate)
         }
